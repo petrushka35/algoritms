@@ -71,6 +71,7 @@ int main(int argc, char * argv[])
 	}
 	printf("%d", array[N-1]);
 
+	free(array);
 	fclose(fp);
 	return 0;
 }
