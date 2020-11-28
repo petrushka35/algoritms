@@ -25,8 +25,8 @@ void my_quicksort(int *array, int first, int last)
 {
     if (first < last)
     {
-        int index1 = first, index2 = last, pivot = array[(index1 + index2) / 2];
-        while(index1 <= index2)
+        int index1 = first, index2 = last, pivot = (array[index1] + array[index2]) / 2;
+        while(index1 <= index2)  
         {
             while (array[index1] < pivot) index1++;
             while (array[index2] > pivot) index2--;
@@ -44,7 +44,7 @@ void my_quicksort(int *array, int first, int last)
     }
 }
 
-int main(int argc, char * argv[])
+int main(int argc, char * argv[]) 
 {
 	int N;
 	FILE *fp;
@@ -77,7 +77,7 @@ int main(int argc, char * argv[])
 	}
 	printf("%d", array[N-1]);
 
-	free(array);
 	fclose(fp);
+	free(array);
 	return 0;
 }
