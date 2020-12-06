@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 struct timeval tv1,tv2,dtv;
 
@@ -21,42 +22,45 @@ long time_stop()
   return dtv.tv_sec*1000+dtv.tv_usec/1000;
 }
 
-void my_shellsort(int * array, int N)
-{
-	int inc[100]; 
 
-	int p1 = 1, p2 = 1, p3 = 1;
-	int i = -1;
-	do{
-  		if(++i % 2) 
-    		inc[i] = 8*p1 - 6*p2 + 1;
-  		else
-  		{
-    		inc[i] = 9*p1 - 9*p3 + 1;
-    		p2 *= 2;
-    		p3 *= 2;
-  		}
-  		p1 *= 2;
-  	}while(3*inc[i] <= N);
+void my_shellsort(int* array, int N) {
+    int step, length;
+    int* m = malloc(sizeof(int));
+    m[0] = 1;
+    for (length = 1; (m[length-1] * 3) < N; length++) {
+        if (length % 2 == 0) {
+            step = 9 * pow(2, length) - 9 * pow(2, (length/2)) + 1;
+        }
+        else {
+            step = 8 * pow(2, length) - 6 * pow(2, (length/2)) + 1;
+        }
+        m = realloc(m, sizeof(int) * length * 2);
+        if (m)
+            m[length] = step;
+        else
+            printf("realloc error");
+    }
 
-	if(i > 0)
-	{
-  		--i;
-  		while(i>=0)
-  		{
-  			int step = inc[--i];
-			int tmp;
-			for(int i = step; i < N; i++)
-			{
-				for (int j = i - step; j >= 0 && array[j] > array[j + step]; j -= step)
-				{
-					tmp = array[j];
-					array[j] = array[j + step];
-					array[j + step] = tmp;
-				}
-			}
-  		}
-	}
+    int* inc = malloc(sizeof(int) * (length));
+    for (int i = 0; i < length-1; i++)
+        inc[i] = m[i]; 
+
+    for (int i = length - 1; i >= 0; i--)
+    {
+        int step = inc[i];
+        int tmp;
+        for (int i = step; i < N; i++)
+        {
+            for (int j = i - step; j >= 0 && array[j] > array[j + step]; j -= step)
+            {
+                tmp = array[j];
+                array[j] = array[j + step];
+                array[j + step] = tmp;
+            }
+        }
+    }
+    free(inc);
+    free(m);
 }
 
 int main(int argc, char * argv[])
